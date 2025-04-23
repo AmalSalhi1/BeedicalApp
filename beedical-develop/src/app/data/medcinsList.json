@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "nom": "Dr. Ahmed Ali",
+    "specialite": "Cardiologue",
+    "disponibilite": ["Lun: 9h-12h", "Mar: 10h-14h"],
+    "image": "/images/doctor1.png",
+    "location": "Casablanca, Maroc",
+    "latitude": 33.5731,
+    "longitude": -7.5898
+  },
+  {
+    "id": 2,
+    "nom": "Dr. Karim Bennani",
+    "specialite": "Pédiatre",
+    "disponibilite": ["Mer: 8h-12h", "Ven: 10h-16h"],
+    "image": "/images/doctor2.png",
+    "location": "Rabat, Maroc",
+    "latitude": 34.0209,
+    "longitude": -6.8416
+  },
+  {
+    "id": 3,
+    "nom": "Dr. Fatima Zahra",
+    "specialite": "Neurologue",
+    "disponibilite": ["Lun: 9h-13h", "Ven: 14h-17h"],
+    "image": "/images/doctor1.png",
+    "location": "Marrakech, Maroc",
+    "latitude": 31.6295,
+    "longitude": -7.9811
+  },
+  {
+    "id": 4,
+    "nom": "Dr. Amine Saidi",
+    "specialite": "ORL",
+    "disponibilite": ["Lun: 9h-12h", "Mer: 15h-19h"],
+    "image": "/images/doctor1.png",
+    "location": "Fès, Maroc",
+    "latitude": 34.0181,
+    "longitude": -5.0078
+  },
+  {
+    "id": 5,
+    "nom": "Dr. Leila El Mansouri",
+    "specialite": "Dermatologue",
+    "disponibilite": ["Mar: 10h-13h", "Jeu: 14h-18h"],
+    "image": "/images/doctor2.png",
+    "location": "Tanger, Maroc",
+    "latitude": 35.7595,
+    "longitude": -5.834
+  },
+  {
+    "id": 6,
+    "nom": "Dr. Youssef Hachimi",
+    "specialite": "Dentiste",
+    "disponibilite": ["Lun: 8h-12h", "Sam: 10h-15h"],
+    "image": "/images/doctor6.png",
+    "location": "Agadir, Maroc",
+    "latitude": 30.4278,
+    "longitude": -9.5981
+  },
+  {
+    "id": 7,
+    "nom": "Dr. Nadia Boussaid",
+    "specialite": "Ophtalmologue",
+    "disponibilite": ["Lun: 9h-12h", "Jeu: 15h-19h"],
+    "image": "/images/doctor7.png",
+    "location": "Oujda, Maroc",
+    "latitude": 34.6816,
+    "longitude": -1.9086
+  },
+  {
+    "id": 8,
+    "nom": "Dr. Mehdi Touzani",
+    "specialite": "Gynécologue",
+    "disponibilite": ["Mer: 9h-12h", "Ven: 14h-17h"],
+    "image": "/images/doctor8.png",
+    "location": "Meknès, Maroc",
+    "latitude": 33.8833,
+    "longitude": -5.55
+  },
+  {
+    "id": 9,
+    "nom": "Dr. Hajar Idrissi",
+    "specialite": "Psychologue",
+    "disponibilite": ["Mar: 10h-13h", "Jeu: 14h-18h"],
+    "image": "/images/doctor9.png",
+    "location": "Kenitra, Maroc",
+    "latitude": 34.2541,
+    "longitude": -6.589
+  },
+  {
+    "id": 10,
+    "nom": "Dr. Mohamed Fadili",
+    "specialite": "Rhumatologue",
+    "disponibilite": ["Lun: 8h-12h", "Sam: 10h-15h"],
+    "image": "/images/doctor10.png",
+    "location": "Tetouan, Maroc",
+    "latitude": 35.5764,
+    "longitude": -5.3684
+  },
+  {
+    "id": 11,
+    "nom": "Dr. Soukaina Amrani",
+    "specialite": "Médecin généraliste",
+    "disponibilite": ["Mar: 9h-12h", "Jeu: 14h-18h"],
+    "image": "/images/doctor11.png",
+    "location": "El Jadida, Maroc",
+    "latitude": 33.2316,
+    "longitude": -8.5004
+  },
+  {
+    "id": 12,
+    "nom": "Dr. Anas Lahmidi",
+    "specialite": "Orthopédiste",
+    "disponibilite": ["Mer: 8h-12h", "Ven: 10h-16h"],
+    "image": "/images/doctor12.png",
+    "location": "Beni Mellal, Maroc",
+    "latitude": 32.3424,
+    "longitude": -6.3758
+  },
+  {
+    "id": 13,
+    "nom": "Dr. Salma Raji",
+    "specialite": "Endocrinologue",
+    "disponibilite": ["Lun: 9h-13h", "Ven: 14h-17h"],
+    "image": "/images/doctor13.png",
+    "location": "Nador, Maroc",
+    "latitude": 35.1688,
+    "longitude": -2.9286
+  },
+  {
+    "id": 14,
+    "nom": "Dr. Oussama El Khattabi",
+    "specialite": "Urologue",
+    "disponibilite": ["Lun: 9h-12h", "Mer: 15h-19h"],
+    "image": "/images/doctor14.png",
+    "location": "Safi, Maroc",
+    "latitude": 32.2833,
+    "longitude": -9.2333
+  },
+  {
+    "id": 15,
+    "nom": "Dr. Wafa El Fassi",
+    "specialite": "Hématologue",
+    "disponibilite": ["Mar: 10h-13h", "Jeu: 14h-18h"],
+    "image": "/images/doctor15.png",
+    "location": "Laayoune, Maroc",
+    "latitude": 27.1536,
+    "longitude": -13.2033
+  }
+]

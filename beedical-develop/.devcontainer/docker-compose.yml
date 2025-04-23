@@ -1,0 +1,37 @@
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:22
+    container_name: beedical
+    volumes:
+      - ..:/workspace
+    working_dir: /workspace
+    ports:
+      - '3000:3000'
+    command: npm run dev
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3000
+    depends_on:
+      - db
+    networks:
+      - app_beedical_network
+
+  db:
+    image: postgres:15
+    container_name: beedical-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_beedical_data:/var/lib/postgresql/data
+    networks:
+      - app_beedical_network
+
+volumes:
+  postgres_beedical_data:
+
+networks:
+  app_beedical_network:

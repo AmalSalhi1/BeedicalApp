@@ -1,0 +1,16 @@
+{
+  "name": "Node.js & TypeScript",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "waitFor": "onCreateCommand",
+  "updateContentCommand": "npm install",
+  "postAttachCommand": "npm run dev",
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "forwardPorts": [3000, 5432]
+}

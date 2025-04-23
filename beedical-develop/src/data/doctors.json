@@ -1,0 +1,231 @@
+[
+  {
+    "id": "1",
+    "name": "Dr Jean Nicoleau",
+    "specialty": "Cardiologue",
+    "address": "Rue Celeste Bringuer",
+    "city": "Béziers",
+    "postalCode": "34500",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": [
+      "Arythmie",
+      "Examens cardiologiques",
+      "Exploration cardiaque"
+    ],
+    "availability": [
+      { "date": "2025-05-22", "times": ["08:30", "09:15", "10:00"] },
+      { "date": "2025-05-23", "times": ["09:00", "09:45", "10:30"] }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Dr Philippe TACHJI",
+    "specialty": "Cardiologue",
+    "address": "1120 Route de Gémenos",
+    "city": "Aubagne",
+    "postalCode": "13400",
+    "sector": 2,
+    "acceptsNewPatients": true,
+    "expertise": ["Rythmologie", "Troubles du rythme"],
+    "availability": [
+      { "date": "2025-05-22", "times": ["08:30", "10:00"] },
+      { "date": "2025-05-30", "times": ["09:00", "11:00"] }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Dr Maud LAPORTE",
+    "specialty": "Cardiologue",
+    "address": "6 Boulevard de Magenta",
+    "city": "Paris",
+    "postalCode": "75010",
+    "sector": 1,
+    "acceptsNewPatients": false,
+    "expertise": ["Hypertension", "Insuffisance cardiaque"],
+    "availability": [
+      { "date": "2025-05-25", "times": ["14:00", "15:00"] },
+      { "date": "2025-05-27", "times": ["10:00", "11:00"] }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Dr Sophie MARTIN",
+    "specialty": "Pédiatre",
+    "address": "15 Rue de la République",
+    "city": "Lyon",
+    "postalCode": "69001",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": ["Vaccination", "Croissance"],
+    "availability": [
+      { "date": "2025-05-24", "times": ["09:00", "10:00"] },
+      { "date": "2025-05-31", "times": ["14:00", "15:00"] }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Dr Pierre DUBOIS",
+    "specialty": "Généraliste",
+    "address": "22 Avenue des Champs-Élysées",
+    "city": "Paris",
+    "postalCode": "75008",
+    "sector": 2,
+    "acceptsNewPatients": true,
+    "expertise": ["Médecine générale", "Vaccination"],
+    "availability": [
+      { "date": "2025-05-26", "times": ["08:30", "09:30"] },
+      { "date": "2025-05-28", "times": ["16:00", "17:00"] }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Dr Élise LEROY",
+    "specialty": "Dermatologue",
+    "address": "5 Rue de la Paix",
+    "city": "Marseille",
+    "postalCode": "13001",
+    "sector": 1,
+    "acceptsNewPatients": false,
+    "expertise": ["Dermatologie esthétique", "Cancer de la peau"],
+    "availability": [
+      { "date": "2025-05-29", "times": ["10:00", "11:00"] },
+      { "date": "2025-06-01", "times": ["14:00", "15:00"] }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Dr Thomas LEFEVRE",
+    "specialty": "Ophtalmologue",
+    "address": "8 Rue de Rivoli",
+    "city": "Paris",
+    "postalCode": "75004",
+    "sector": 2,
+    "acceptsNewPatients": true,
+    "expertise": ["Cataracte", "Glaucome"],
+    "availability": [
+      { "date": "2025-05-24", "times": ["09:00", "10:00"] },
+      { "date": "2025-05-27", "times": ["14:00", "15:00"] }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Dr Nathalie SIMON",
+    "specialty": "Gynécologue",
+    "address": "12 Rue de la Pompe",
+    "city": "Paris",
+    "postalCode": "75016",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": ["Suivi grossesse", "Contraception"],
+    "availability": [
+      { "date": "2025-05-25", "times": ["11:00", "14:00"] },
+      { "date": "2025-05-28", "times": ["09:00", "10:00"] }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Dr Marc DUPONT",
+    "specialty": "ORL",
+    "address": "3 Avenue Foch",
+    "city": "Lille",
+    "postalCode": "59000",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": ["Surdité", "Vertiges"],
+    "availability": [
+      { "date": "2025-05-26", "times": ["10:00", "11:00"] },
+      { "date": "2025-05-29", "times": ["16:00", "17:00"] }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Dr Isabelle MERCIER",
+    "specialty": "Pneumologue",
+    "address": "7 Rue de Rome",
+    "city": "Toulouse",
+    "postalCode": "31000",
+    "sector": 2,
+    "acceptsNewPatients": false,
+    "expertise": ["Asthme", "BPCO"],
+    "availability": [
+      { "date": "2025-05-27", "times": ["09:00", "10:00"] },
+      { "date": "2025-05-30", "times": ["14:00", "15:00"] }
+    ]
+  },
+  {
+    "id": "11",
+    "name": "Dr Laurent GIRARD",
+    "specialty": "Rhumatologue",
+    "address": "9 Boulevard Haussmann",
+    "city": "Paris",
+    "postalCode": "75009",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": ["Arthrose", "Ostéoporose"],
+    "availability": [
+      { "date": "2025-05-28", "times": ["11:00", "14:00"] },
+      { "date": "2025-05-31", "times": ["09:00", "10:00"] }
+    ]
+  },
+  {
+    "id": "12",
+    "name": "Dr Caroline FONTAINE",
+    "specialty": "Endocrinologue",
+    "address": "4 Rue de la Liberté",
+    "city": "Bordeaux",
+    "postalCode": "33000",
+    "sector": 2,
+    "acceptsNewPatients": true,
+    "expertise": ["Diabète", "Thyroïde"],
+    "availability": [
+      { "date": "2025-05-29", "times": ["10:00", "11:00"] },
+      { "date": "2025-06-01", "times": ["16:00", "17:00"] }
+    ]
+  },
+  {
+    "id": "13",
+    "name": "Dr Olivier MARTIN",
+    "specialty": "Gastro-entérologue",
+    "address": "11 Rue de la République",
+    "city": "Nantes",
+    "postalCode": "44000",
+    "sector": 1,
+    "acceptsNewPatients": false,
+    "expertise": ["Coloscopie", "Reflux"],
+    "availability": [
+      { "date": "2025-05-30", "times": ["09:00", "10:00"] },
+      { "date": "2025-06-02", "times": ["14:00", "15:00"] }
+    ]
+  },
+  {
+    "id": "14",
+    "name": "Dr Véronique LEROY",
+    "specialty": "Neurologue",
+    "address": "2 Avenue Victor Hugo",
+    "city": "Nice",
+    "postalCode": "06000",
+    "sector": 2,
+    "acceptsNewPatients": true,
+    "expertise": ["Migraines", "Épilepsie"],
+    "availability": [
+      { "date": "2025-05-31", "times": ["11:00", "14:00"] },
+      { "date": "2025-06-03", "times": ["09:00", "10:00"] }
+    ]
+  },
+  {
+    "id": "15",
+    "name": "Dr François DUBOIS",
+    "specialty": "Urologue",
+    "address": "6 Rue de la Paix",
+    "city": "Strasbourg",
+    "postalCode": "67000",
+    "sector": 1,
+    "acceptsNewPatients": true,
+    "expertise": ["Prostate", "Calculs rénaux"],
+    "availability": [
+      { "date": "2025-06-01", "times": ["10:00", "11:00"] },
+      { "date": "2025-06-04", "times": ["16:00", "17:00"] }
+    ]
+  }
+]

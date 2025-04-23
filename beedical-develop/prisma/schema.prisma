@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  clerkId     String       @id @unique
+  Profil      Profil?
+  Favoris     Favoris[]
+  Historique  Historique[]
+  procheGeres ProcheGere[]
+  Proche      Proche[]
+}
+
+model Profil {
+  id               String    @id @default(cuid())
+  user             User      @relation(fields: [userId], references: [clerkId])
+  userId           String    @unique
+  prenom           String
+  nom              String
+  dateNaissance    DateTime?
+  sexe             String
+  telephone        String
+  email            String    @unique
+  ville            String
+  lieuNaissance    String
+  adresse          String
+  codePostal       String
+  assuranceMaladie String
+  cin              String    @unique
+  profession       String
+  photoProfil      String?
+}
+
+model Favoris {
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(fields: [userId], references: [clerkId])
+  userId    String
+  medecinId String
+
+  @@unique([userId, medecinId])
+}
+
+model Historique {
+  id           Int    @id @default(autoincrement())
+  user         User   @relation(fields: [userId], references: [clerkId])
+  userId       String
+  rendezVousId String
+}
+
+model Proche {
+  id            Int          @id @default(autoincrement())
+  prenom        String
+  nom           String
+  dateNaissance DateTime?
+  sexe          String
+  telephone     String
+  ville         String
+  lieuNaissance String
+  photoProfil   String?
+  adresse       String?
+  codePostal    String?
+  userAccountId String?      @unique
+  userAccount   User?        @relation(fields: [userAccountId], references: [clerkId])
+  gerants       ProcheGere[]
+}
+
+model ProcheGere {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  user     User   @relation(fields: [userId], references: [clerkId])
+  procheId Int
+  proche   Proche @relation(fields: [procheId], references: [id])
+  role     String
+
+  @@unique([userId, procheId])
+}
