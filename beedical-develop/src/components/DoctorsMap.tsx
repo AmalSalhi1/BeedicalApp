@@ -4,15 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Configuration des icônes de marqueurs avec votre image
 const customIcon = L.icon({
-  iconUrl: '/images/markers.png', // Chemin vers votre image dans le dossier public
-  iconSize: [40, 40], // Taille de l'icône (largeur, hauteur)
-  iconAnchor: [20, 40], // Point d'ancrage de l'icône
-  popupAnchor: [0, -40], // Position du popup par rapport à l'icône
+  iconUrl: '/images/markers.png', 
+  iconSize: [40, 40],
+  iconAnchor: [20, 40], 
+  popupAnchor: [0, -40],
 });
 
-// Définir une interface pour les props
 interface Doctor {
   readonly id: number;
   readonly nom: string;
@@ -25,9 +23,9 @@ interface Doctor {
 }
 
 interface DoctorsMapProps {
-  readonly doctors: readonly Doctor[]; // Tableau en lecture seule
-  readonly selectedDoctor?: number; // ID optionnel du médecin sélectionné
-  readonly onMarkerClick?: (doctorId: number) => void; // Fonction de callback optionnelle
+  readonly doctors: readonly Doctor[]; 
+  readonly selectedDoctor?: number;
+  readonly onMarkerClick?: (doctorId: number) => void;
 }
 
 export default function DoctorsMap({ 
@@ -41,7 +39,6 @@ export default function DoctorsMap({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Vérifier que le code s'exécute côté client et que la référence de la carte est valide
     if (typeof window === 'undefined' || !mapRef.current) return;
 
     // Initialiser la carte avec des options de style

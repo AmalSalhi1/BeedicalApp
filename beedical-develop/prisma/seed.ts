@@ -143,7 +143,97 @@ async function createSpecialites() {
   return specialiteEntities;
 }
 
-// Fonction pour créer les médecins
+// Fonction pour créer les disponibilités et rendez-vous
+async function createDisponibilitesEtRendezVous(medecins) {
+  // Récupérer les utilisateurs pour les rendez-vous
+  const users = await prisma.user.findMany();
+
+  // Pour chaque médecin, créer des disponibilités et quelques rendez-vous
+  for (const medecin of medecins) {
+    // Créer des disponibilités pour les 14 prochains jours
+    const today = new Date();
+
+    // Heures de travail possibles
+    const heuresPossibles = [
+      { debut: '09:00', fin: '10:00' },
+      { debut: '10:00', fin: '11:00' },
+      { debut: '11:00', fin: '12:00' },
+      { debut: '14:00', fin: '15:00' },
+      { debut: '15:00', fin: '16:00' },
+      { debut: '16:00', fin: '17:00' },
+    ];
+
+    // Pour chaque jour
+    for (let i = 1; i <= 14; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+
+      // Sauter les dimanches (jour 0)
+      if (date.getDay() === 0) continue;
+
+      // Choisir aléatoirement 3-5 créneaux horaires pour ce jour
+      const nombreCreneaux = Math.floor(Math.random() * 3) + 3; // 3 à 5 créneaux
+      const creneauxChoisis = [];
+
+      for (let j = 0; j < nombreCreneaux; j++) {
+        let index;
+        do {
+          index = Math.floor(Math.random() * heuresPossibles.length);
+        } while (creneauxChoisis.includes(index));
+
+        creneauxChoisis.push(index);
+      }
+
+      // Trier les créneaux pour qu'ils soient dans l'ordre
+      creneauxChoisis.sort();
+
+      // Créer les disponibilités pour ce jour
+      for (const index of creneauxChoisis) {
+        const { debut, fin } = heuresPossibles[index];
+
+        // Créer la disponibilité
+        const disponibilite = await prisma.disponibilite.create({
+          data: {
+            date,
+            heureDebut: debut,
+            heureFin: fin,
+            medecinId: medecin.id
+          }
+        });
+
+        // 30% de chance de créer un rendez-vous pour cette disponibilité
+        if (Math.random() < 0.3 && users.length > 0) {
+          // Choisir un utilisateur aléatoire
+          const user = users[Math.floor(Math.random() * users.length)];
+
+          // Créer le rendez-vous
+          await prisma.rendezVous.create({
+            data: {
+              date,
+              heureDebut: debut,
+              heureFin: fin,
+              medecinId: medecin.id,
+              patientId: user.clerkId,
+              status: 'reservé'
+            }
+          });
+        } else {
+          // Créer un rendez-vous disponible
+          await prisma.rendezVous.create({
+            data: {
+              date,
+              heureDebut: debut,
+              heureFin: fin,
+              medecinId: medecin.id,
+              status: 'disponible'
+            }
+          });
+        }
+      }
+    }
+  }
+}
+
 async function createMedecins(villes, specialites) {
   const medecins = [];
 
@@ -253,11 +343,11 @@ async function createMedecins(villes, specialites) {
         adresse: faker.location.streetAddress(),
         codePostal: faker.location.zipCode(),
         image: `/images/doctor${(i % 15) + 1}.png`,
-        latitude: coords.lat + (Math.random() * 0.05 - 0.025), 
+        latitude: coords.lat + (Math.random() * 0.05 - 0.025),
         longitude: coords.lng + (Math.random() * 0.05 - 0.025),
         disponibilite: disponibilites,
         villeId: ville.id,
-        accepteNouveaux: Math.random() > 0.2, 
+        accepteNouveaux: Math.random() > 0.2,
         secteur: Math.random() > 0.5 ? 1 : 2,
       }
     });
@@ -282,6 +372,8 @@ async function main() {
   console.log('Création des données fictives...');
 
   // Nettoyage initial
+  await prisma.rendezVous.deleteMany();
+  await prisma.disponibilite.deleteMany();
   await prisma.medecinSpecialite.deleteMany();
   await prisma.medecin.deleteMany();
   await prisma.specialite.deleteMany();
@@ -306,6 +398,10 @@ async function main() {
   // Création des médecins
   console.log('Création des médecins...');
   const medecinEntities = await createMedecins(villeEntities, specialiteEntities);
+
+  // Création des disponibilités et rendez-vous
+  console.log('Création des disponibilités et rendez-vous...');
+  await createDisponibilitesEtRendezVous(medecinEntities);
 
   // Vérification des utilisateurs
   const users = await prisma.user.findMany({
@@ -337,6 +433,12 @@ async function main() {
   console.log(`Villes: ${villeEntities.length}`);
   console.log(`Spécialités: ${specialiteEntities.length}`);
   console.log(`Médecins: ${medecins.length}`);
+
+  // Vérification des disponibilités et rendez-vous
+  const disponibilites = await prisma.disponibilite.findMany();
+  const rendezVous = await prisma.rendezVous.findMany();
+  console.log(`Disponibilités: ${disponibilites.length}`);
+  console.log(`Rendez-vous: ${rendezVous.length}`);
 
   // Afficher quelques médecins pour vérification
   console.log('\nExemple de médecins:');

@@ -14,6 +14,7 @@ model User {
   Proche      Proche?
   procheGeres ProcheGere[]
   Profil      Profil?
+  rendezVous  RendezVous[]
 }
 
 model Profil {
@@ -67,6 +68,7 @@ model Proche {
   userAccountId String?      @unique
   userAccount   User?        @relation(fields: [userAccountId], references: [clerkId])
   gerants       ProcheGere[]
+  rendezVous    RendezVous[]
 }
 
 model ProcheGere {
@@ -99,6 +101,8 @@ model Medecin {
   updatedAt       DateTime            @updatedAt
   ville           Ville               @relation(fields: [villeId], references: [id])
   specialites     MedecinSpecialite[]
+  disponibilites  Disponibilite[]
+  rendezVous      RendezVous[]
 }
 
 model Specialite {
@@ -121,4 +125,31 @@ model MedecinSpecialite {
   specialite   Specialite @relation(fields: [specialiteId], references: [id])
 
   @@unique([medecinId, specialiteId])
+}
+
+model RendezVous {
+  id          Int       @id @default(autoincrement())
+  date        DateTime
+  heureDebut  String
+  heureFin    String
+  medecinId   Int
+  patientId   String?
+  procheId    Int?
+  status      String    @default("disponible") // disponible, reservé, annulé, terminé
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  medecin     Medecin   @relation(fields: [medecinId], references: [id])
+  patient     User?     @relation(fields: [patientId], references: [clerkId])
+  proche      Proche?   @relation(fields: [procheId], references: [id])
+}
+
+model Disponibilite {
+  id         Int      @id @default(autoincrement())
+  date       DateTime
+  heureDebut String
+  heureFin   String
+  medecinId  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  medecin    Medecin  @relation(fields: [medecinId], references: [id])
 }
