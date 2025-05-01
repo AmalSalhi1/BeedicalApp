@@ -11,7 +11,9 @@
     "lint": "next lint",
     "format": "prettier --write .",
     "prepare": "husky",
-    "seed": "ts-node --esm prisma/seed.ts"
+    "seed": "ts-node --esm prisma/seed.ts",
+    "seed:medical": "tsx prisma/seeders/index.ts"
+
   },
   "prisma": {
     "seed": "ts-node --esm prisma/seed.ts"
