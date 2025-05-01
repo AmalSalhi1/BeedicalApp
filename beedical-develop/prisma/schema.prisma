@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -43,10 +37,9 @@ model Profil {
 }
 
 model Favoris {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [clerkId])
+  id        Int    @id @default(autoincrement())
+  user      User   @relation(fields: [userId], references: [clerkId])
   userId    String
-  medecin   Medecin  @relation(fields: [medecinId], references: [id])
   medecinId String
 
   @@unique([userId, medecinId])
@@ -87,42 +80,26 @@ model ProcheGere {
   @@unique([userId, procheId])
 }
 
-model Medicine {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  speciality  Speciality? @relation(fields: [specialityId], references: [id])
-  specialityId String?
-  medecins    Medecin[]
-}
 
-model Speciality {
-  id          String     @id @default(cuid())
-  name        String     @unique
-  description String?
-  medicines   Medicine[]
-  medecins    Medecin[]
+model Specialite {
+  id           String         @id @default(cuid())
+  nom          String         @unique
+  listeMedecins ListeMedecins[]
 }
 
 model Ville {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  region      String?
-  medecins    Medecin[]
+  id           String         @id @default(cuid())
+  nom          String         @unique
+  region       String?
+  listeMedecins ListeMedecins[]
 }
 
-model Medecin {
-  id           String     @id @default(cuid())
-  nom          String
-  prenom       String
-  email        String     @unique
-  telephone    String
-  adresse      String?
-  speciality   Speciality @relation(fields: [specialityId], references: [id])
-  specialityId String
-  ville        Ville      @relation(fields: [villeId], references: [id])
-  villeId      String
-  medicines    Medicine[]
-  favoris      Favoris[]
+model ListeMedecins {
+  id             String      @id @default(cuid())
+  nom            String
+  adresse        String?
+  specialite     Specialite  @relation(fields: [specialiteId], references: [id])
+  specialiteId   String
+  ville          Ville       @relation(fields: [villeId], references: [id])
+  villeId        String
 }
-
