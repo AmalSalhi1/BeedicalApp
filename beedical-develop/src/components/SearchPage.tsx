@@ -158,6 +158,19 @@ export default function SearchPage() {
     searchDoctors(searchQuery, locationQuery);
   };
 
+  const clearSearch = () => {
+    setSearchQuery('');
+    setLocationQuery('');
+    setFilteredDoctors(allDoctors);
+    setCurrentPage(1);
+    setFilters({
+      accepteNouveaux: false,
+      secteur: 'all',
+      specialite: 'all'
+    });
+    setSortBy('relevance');
+  };
+
   const indexOfLastDoctor = currentPage * doctorsPerPage;
   const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
   const currentDoctors = filteredDoctors.slice(
@@ -251,17 +264,25 @@ export default function SearchPage() {
             )}
           </div>
 
-          <button
-            onClick={handleSearch}
-            disabled={isLoading}
-            className="rounded-lg bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700 disabled:bg-blue-400 flex items-center justify-center"
-          >
-            {isLoading ? (
-              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            ) : (
-              'Rechercher'
-            )}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleSearch}
+              disabled={isLoading}
+              className="rounded-lg bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700 disabled:bg-blue-400 flex items-center justify-center"
+            >
+              {isLoading ? (
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              ) : (
+                'Rechercher'
+              )}
+            </button>
+            <button
+              onClick={clearSearch}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-lg transition-colors"
+            >
+              Effacer
+            </button>
+          </div>
         </div>
 
 
