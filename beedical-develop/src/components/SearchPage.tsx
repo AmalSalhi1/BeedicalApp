@@ -1,42 +1,62 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import DoctorsMap from '@/components/DoctorsMap';
-import doctorsData from '@/app/data/medcinsList.json';
 import Header from '@/components/landing/Header';
 import Footer from '@/components/landing/Footer';
 import DoctorCard from '@/components/DoctorCard';
 
 export default function SearchPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [locationQuery, setLocationQuery] = useState('');
-  const [filteredDoctors, setFilteredDoctors] = useState(doctorsData);
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('query') || '');
+  const [locationQuery, setLocationQuery] = useState(searchParams.get('location') || '');
+  const [filteredDoctors, setFilteredDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const doctorsPerPage = 5;
 
-  const uniqueNames = [...new Set(doctorsData.map((doctor) => doctor.nom))];
+  // Fetch doctors data from API based on URL parameters
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/search?query=${encodeURIComponent(searchQuery)}&location=${encodeURIComponent(locationQuery)}`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setFilteredDoctors(data);
+        } else {
+          console.error('Error fetching doctors');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDoctors();
+  }, [searchQuery, locationQuery]);
+
+  // Get unique values for autocomplete
+  const uniqueNames = [...new Set(filteredDoctors.map((doctor) => doctor.nom))];
   const uniqueSpecialties = [
-    ...new Set(doctorsData.map((doctor) => doctor.specialite)),
+    ...new Set(filteredDoctors.map((doctor) => doctor.specialite)),
   ];
   const uniqueLocations = [
-    ...new Set(doctorsData.map((doctor) => doctor.location)),
+    ...new Set(filteredDoctors.map((doctor) => doctor.location)),
   ];
 
   const handleSearch = () => {
-    const filtered = doctorsData.filter((doctor) => {
-      const matchesNameOrSpecialty = searchQuery
-        ? doctor.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          doctor.specialite.toLowerCase().includes(searchQuery.toLowerCase())
-        : true;
+    // Reset to first page when searching
+    setCurrentPage(1);
+  };
 
-      const matchesLocation = locationQuery
-        ? doctor.location.toLowerCase().includes(locationQuery.toLowerCase())
-        : true;
-
-      return matchesNameOrSpecialty && matchesLocation;
-    });
-
-    setFilteredDoctors(filtered);
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setLocationQuery('');
     setCurrentPage(1);
   };
 
@@ -85,11 +105,6 @@ export default function SearchPage() {
                       key={name}
                       className='w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-100'
                       onClick={() => setSearchQuery(name)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setSearchQuery(name);
-                        }
-                      }}
                     >
                       {name}
                     </button>
@@ -103,11 +118,6 @@ export default function SearchPage() {
                       key={specialty}
                       className='w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-100'
                       onClick={() => setSearchQuery(specialty)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setSearchQuery(specialty);
-                        }
-                      }}
                     >
                       {specialty}
                     </button>
@@ -135,11 +145,6 @@ export default function SearchPage() {
                       key={location}
                       className='w-full cursor-pointer px-4 py-2 text-left hover:bg-gray-100'
                       onClick={() => setLocationQuery(location)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          setLocationQuery(location);
-                        }
-                      }}
                     >
                       {location}
                     </button>
@@ -150,50 +155,68 @@ export default function SearchPage() {
 
           <button
             onClick={handleSearch}
-            className='bg-primary hover:bg-primary-700 mt-4 rounded-lg px-4 py-3 text-white transition-colors sm:mt-0'
+            className='bg-primary hover:bg-primary-700 mt-4 rounded-lg px-4 py-3 text-black transition-colors sm:mt-0'
           >
             Rechercher
           </button>
+          
+          <button
+            onClick={handleClearSearch}
+            className='bg-gray-200 hover:bg-gray-300 mt-4 rounded-lg px-4 py-3 text-gray-700 transition-colors sm:mt-0'
+          >
+            Effacer
+          </button>
         </div>
 
-        <div className='flex flex-grow flex-col gap-4 lg:flex-row'>
-          <div className='w-full overflow-y-auto pr-0 lg:w-8/12 lg:pr-4'>
-            <div className='mb-8 space-y-6'>
-              {currentDoctors.length === 0 ? (
-                <p className='text-center text-gray-600'>
-                  Aucun résultat trouvé.
-                </p>
-              ) : (
-                currentDoctors.map((doctor) => (
-                  <DoctorCard key={doctor.id} doctor={doctor} />
-                ))
+        {loading ? (
+          <div className="flex justify-center my-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <div className='flex flex-grow flex-col gap-4 lg:flex-row'>
+            <div className='w-full overflow-y-auto pr-0 lg:w-8/12 lg:pr-4'>
+              <div className='mb-8 space-y-6'>
+                {currentDoctors.length === 0 ? (
+                  <p className='text-center text-gray-600'>
+                    Aucun résultat trouvé.
+                  </p>
+                ) : (
+                  currentDoctors.map((doctor) => (
+                    <DoctorCard key={doctor.id} doctor={doctor} />
+                  ))
+                )}
+              </div>
+
+              {filteredDoctors.length > doctorsPerPage && (
+                <div className='mt-4 flex items-center justify-between'>
+                  <button
+                    onClick={goToPreviousPage}
+                    className='text-primary hover:text-primary-700 flex items-center rounded-lg px-4 py-2'
+                    disabled={currentPage === 1}
+                  >
+                    <span className='mr-2'>←</span> Précédent
+                  </button>
+                  <span className="text-gray-600">
+                    Page {currentPage} sur {totalPages}
+                  </span>
+                  <button
+                    onClick={goToNextPage}
+                    className='text-primary hover:text-primary-700 flex items-center rounded-lg px-4 py-2'
+                    disabled={currentPage === totalPages}
+                  >
+                    Suivant <span className='ml-2'>→</span>
+                  </button>
+                </div>
               )}
             </div>
 
-            <div className='mt-4 flex items-center justify-between'>
-              <button
-                onClick={goToPreviousPage}
-                className='text-primary hover:text-primary-700 flex items-center rounded-lg px-4 py-2'
-                disabled={currentPage === 1}
-              >
-                <span className='mr-2'>←</span> Précédent
-              </button>
-              <button
-                onClick={goToNextPage}
-                className='text-primary hover:text-primary-700 flex items-center rounded-lg px-4 py-2'
-                disabled={currentPage === totalPages}
-              >
-                Suivant <span className='ml-2'>→</span>
-              </button>
+            <div className='flex w-full flex-col pl-0 lg:w-4/12'>
+              <div className='flex-grow overflow-hidden rounded-lg shadow-lg'>
+                <DoctorsMap doctors={filteredDoctors} />
+              </div>
             </div>
           </div>
-
-          <div className='flex w-full flex-col pl-0 lg:w-4/12'>
-            <div className='flex-grow overflow-hidden rounded-lg shadow-lg'>
-              <DoctorsMap doctors={filteredDoctors} />
-            </div>
-          </div>
-        </div>
+        )}
       </div>
       <Footer />
     </div>
