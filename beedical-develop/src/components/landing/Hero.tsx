@@ -91,19 +91,19 @@ export default function Hero() {
               consultation.
             </p>
 
-            {/* Barre de recherche */}
+     
             <form
               onSubmit={handleSearch}
               className='relative mt-8 flex flex-col gap-4 sm:flex-row'
             >
-              {/* Recherche de médecins */}
+        
               <div className='relative'>
                 <input
                   type='text'
                   id='search'
                   name='search'
                   placeholder='Nom, spécialité...'
-                  className='rounded-lg border bg-white px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
+                  className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   disabled={loading}
@@ -124,14 +124,13 @@ export default function Hero() {
                 )}
               </div>
 
-              {/* Recherche de villes */}
               <div className='relative'>
                 <input
                   type='text'
                   id='location'
                   name='location'
                   placeholder='Lieu...'
-                  className='rounded-lg border bg-white px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
+                  className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   disabled={loading}
@@ -162,7 +161,7 @@ export default function Hero() {
             </form>
           </div>
 
-          {/* Image */}
+ 
           <div className='relative md:w-1/2'>
             <div className='relative h-80 w-full md:h-96'>
               <Image
