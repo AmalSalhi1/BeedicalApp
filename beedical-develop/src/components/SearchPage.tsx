@@ -14,14 +14,18 @@ export default function SearchPage() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('query') || '');
   const [locationQuery, setLocationQuery] = useState(searchParams.get('location') || '');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isLocationFocused, setIsLocationFocused] = useState(false);
   interface Doctor {
-    id: string;
+    id: number;
     nom: string;
     specialite: string;
     location: string;
     image?: string;
     disponibilite?: string[];
     acceptsNewPatients?: boolean;
+    latitude: number;
+    longitude: number;
   }
 
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
@@ -53,7 +57,6 @@ export default function SearchPage() {
     fetchDoctors();
   }, [searchQuery, locationQuery]);
 
-  // Get unique values for autocomplete
   const uniqueNames = [...new Set(filteredDoctors.map((doctor) => doctor.nom))];
   const uniqueSpecialties = [
     ...new Set(filteredDoctors.map((doctor) => doctor.specialite)),
@@ -105,9 +108,11 @@ export default function SearchPage() {
               className='w-full rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
             {/* Name/specialty search autocomplete */}
-            {searchQuery.length > 0 && (
+            {searchQuery.length > 0 && isSearchFocused && (
               <div className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'>
                 {uniqueNames
                   .filter((name) =>
@@ -146,9 +151,11 @@ export default function SearchPage() {
               className='w-full rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
+              onFocus={() => setIsLocationFocused(true)}
+              onBlur={() => setTimeout(() => setIsLocationFocused(false), 200)}
             />
             {/* Location search autocomplete */}
-            {locationQuery.length > 0 && (
+            {locationQuery.length > 0 && isLocationFocused && (
               <div className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'>
                 {uniqueLocations
                   .filter((location) =>
@@ -312,7 +319,10 @@ export default function SearchPage() {
 
             <div className='flex w-full flex-col pl-0 lg:w-4/12'>
               <div className='flex-grow overflow-hidden rounded-lg shadow-lg'>
-                <DoctorsMap doctors={filteredDoctors} />
+                <DoctorsMap doctors={filteredDoctors.filter(doctor => 
+                  typeof doctor.latitude === 'number' && 
+                  typeof doctor.longitude === 'number'
+                )} />
               </div>
             </div>
           </div>
