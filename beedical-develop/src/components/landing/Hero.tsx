@@ -10,19 +10,39 @@ export default function Hero() {
   const [filteredCities, setFilteredCities] = useState<string[]>([]);
   const [filteredDoctors, setFilteredDoctors] = useState<string[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [doctorsList, setDoctorsList] = useState<string[]>([]);
+  const [citiesList, setCitiesList] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-
-  const doctorsList = [
-    'Dr. Ahmed',
-    'Dr. Salma',
-    'Dr. Youssef',
-    'Dr. Anissa',
-    'Dr. Karim',
-  ];
-  const citiesList = ['Casablanca', 'Rabat', 'Fès', 'Tanger', 'Marrakech'];
 
   useEffect(() => {
     setIsClient(true);
+    
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const doctorsResponse = await fetch('/api/doctors/list');
+        if (doctorsResponse.ok) {
+          const doctorsData = await doctorsResponse.json();
+          const names = doctorsData.map((doctor: any) => `Dr. ${doctor.nom}`);
+          setDoctorsList(names);
+        }
+        
+
+        const citiesResponse = await fetch('/api/cities/list');
+        if (citiesResponse.ok) {
+          const citiesData = await citiesResponse.json();
+          const cities = citiesData.map((city: any) => city.nom);
+          setCitiesList(cities);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -33,7 +53,7 @@ export default function Hero() {
           )
         : []
     );
-  }, [location]);
+  }, [location, citiesList]);
 
   useEffect(() => {
     setFilteredDoctors(
@@ -43,18 +63,16 @@ export default function Hero() {
           )
         : []
     );
-  }, [search]);
+  }, [search, doctorsList]);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (search && location) {
-      // Assurez-vous que les paramètres sont correctement encodés dans l'URL
+    if (search || location) {
       router.push(
-        `/Search?query=${encodeURIComponent(search)}&location=${encodeURIComponent(location)}/`
+        `/Search?query=${encodeURIComponent(search)}&location=${encodeURIComponent(location)}`
       );
     } else {
-      // Optionnel : ajouter un message d'erreur ou gestion du cas où les champs sont vides
-      console.log('Veuillez remplir tous les champs.');
+      console.log('Veuillez remplir au moins un champ.');
     }
   };
 
@@ -69,25 +87,26 @@ export default function Hero() {
               Prenez rendez-vous avec votre médecin en un clic
             </h1>
             <p className='mt-6 text-lg text-gray-600'>
-              Trouvez rapidement un professionnel de santé et réservez votre
+              Trouvez rapidement un professionnel de santé et Reservez votre
               consultation.
             </p>
 
-            {/* Barre de recherche */}
+     
             <form
               onSubmit={handleSearch}
               className='relative mt-8 flex flex-col gap-4 sm:flex-row'
             >
-              {/* Recherche de médecins */}
+        
               <div className='relative'>
                 <input
                   type='text'
                   id='search'
                   name='search'
                   placeholder='Nom, spécialité...'
-                  className='rounded-lg border bg-white px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
+                  className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  disabled={loading}
                 />
                 {filteredDoctors.length > 0 && (
                   <div className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'>
@@ -105,16 +124,16 @@ export default function Hero() {
                 )}
               </div>
 
-              {/* Recherche de villes */}
               <div className='relative'>
                 <input
                   type='text'
                   id='location'
                   name='location'
                   placeholder='Lieu...'
-                  className='rounded-lg border bg-white px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
+                  className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  disabled={loading}
                 />
                 {filteredCities.length > 0 && (
                   <div className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'>
@@ -135,13 +154,14 @@ export default function Hero() {
               <button
                 type='submit'
                 className='bg-primary hover:bg-primary-700 rounded-lg px-6 py-3 text-black shadow-md transition-colors'
+                disabled={loading}
               >
                 Rechercher
               </button>
             </form>
           </div>
 
-          {/* Image */}
+ 
           <div className='relative md:w-1/2'>
             <div className='relative h-80 w-full md:h-96'>
               <Image
