@@ -170,7 +170,7 @@ export default function SearchPage() {
           >
             Rechercher
           </button>
-          
+
           <button
             onClick={handleClearSearch}
             className='bg-gray-200 hover:bg-gray-300 mt-4 rounded-lg px-4 py-3 text-gray-700 transition-colors sm:mt-0'
@@ -192,7 +192,7 @@ export default function SearchPage() {
                 {locationQuery && ` à ${locationQuery}`}
               </p>
             </div>
-            
+
             <div className='mb-8 space-y-6'>
               {currentDoctors.length === 0 ? (
                 <p className='text-center text-gray-600'>
@@ -222,11 +222,13 @@ export default function SearchPage() {
                             </div>
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-black">Dr {doctor.nom}</h3>
+                            <Link href={`/doctor/${encodeURIComponent(doctor.id)}`}>
+                              <h3 className="text-lg font-bold text-black hover:text-primary cursor-pointer">Dr {doctor.nom}</h3>
+                            </Link>
                             <p className="text-gray-800">{doctor.specialite}</p>
                           </div>
                         </div>
-                        
+
                         <div className="mt-4 space-y-2 text-gray-800">
                           <p className="flex items-center">
                             <MapPinIcon className="h-5 w-5 text-gray-500 mr-2" />
@@ -234,30 +236,30 @@ export default function SearchPage() {
                           </p>
                         </div>
                       </div>
-                      
+
                       <div className="bg-gray-50 p-4 md:w-2/3">
                         {/* Move appointment button above calendar */}
                         <div className="mb-4">
                           <Link
-                            href={`/doctor/${doctor.id}`}
+                            href={`/doctor/${encodeURIComponent(doctor.id)}`}
                             className="bg-yellow-400 hover:bg-yellow-600 w-full block rounded-lg px-4 py-2 text-center text-white transition-colors"
                           >
                             PRENDRE RENDEZ-VOUS
                           </Link>
                         </div>
-                        
+
                         {doctor.disponibilite && doctor.disponibilite.length > 0 ? (
                           <div className="grid grid-cols-6 gap-2">
                             {Array.from({ length: 6 }).map((_, index) => {
                               const date = new Date();
                               date.setDate(date.getDate() + index);
-                              
+
                               const dayNames = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
                               const dayName = dayNames[date.getDay()];
                               const dayNumber = date.getDate();
                               const monthNames = ['jan', 'fév', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
                               const monthName = monthNames[date.getMonth()];
-                              
+
                               return (
                                 <div key={index} className="text-center">
                                   <p className="text-gray-800">{dayName}</p>
@@ -272,7 +274,7 @@ export default function SearchPage() {
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2 text-gray-600">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                               </svg>
-                              {doctor.acceptsNewPatients === false 
+                              {doctor.acceptsNewPatients === false
                                 ? "Ce soignant Reserve la prise de rendez-vous en ligne aux patients déjà suivis."
                                 : "Aucune disponibilité pour le moment."}
                             </div>
