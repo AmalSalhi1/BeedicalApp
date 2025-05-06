@@ -13,11 +13,13 @@ export default function Hero() {
   const [doctorsList, setDoctorsList] = useState<string[]>([]);
   const [citiesList, setCitiesList] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showDoctorDropdown, setShowDoctorDropdown] = useState(false);
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
-    
+
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -27,7 +29,7 @@ export default function Hero() {
           const names = doctorsData.map((doctor: any) => `Dr. ${doctor.nom}`);
           setDoctorsList(names);
         }
-        
+
 
         const citiesResponse = await fetch('/api/cities/list');
         if (citiesResponse.ok) {
@@ -41,7 +43,7 @@ export default function Hero() {
         setLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -68,6 +70,8 @@ export default function Hero() {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (search || location) {
+      setShowDoctorDropdown(false);
+      setShowCityDropdown(false);
       router.push(
         `/Search?query=${encodeURIComponent(search)}&location=${encodeURIComponent(location)}`
       );
@@ -91,12 +95,12 @@ export default function Hero() {
               consultation.
             </p>
 
-     
+
             <form
               onSubmit={handleSearch}
               className='relative mt-8 flex flex-col gap-4 sm:flex-row'
             >
-        
+
               <div className='relative'>
                 <input
                   type='text'
@@ -105,16 +109,31 @@ export default function Hero() {
                   placeholder='Nom, spécialité...'
                   className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setShowDoctorDropdown(e.target.value.length > 0);
+                  }}
+                  onFocus={() => setShowDoctorDropdown(search.length > 0)}
+                  onBlur={() => {
+                    // Delay hiding the dropdown to allow click events to register
+                    setTimeout(() => setShowDoctorDropdown(false), 200);
+                  }}
                   disabled={loading}
                 />
-                {filteredDoctors.length > 0 && (
-                  <div className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'>
+                {showDoctorDropdown && filteredDoctors.length > 0 && (
+                  <div
+                    className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'
+                    onMouseEnter={() => setShowDoctorDropdown(true)}
+                    onMouseLeave={() => setShowDoctorDropdown(false)}
+                  >
                     {filteredDoctors.map((doctor) => (
                       <button
                         key={doctor}
                         type='button'
-                        onClick={() => setSearch(doctor)}
+                        onClick={() => {
+                          setSearch(doctor);
+                          setShowDoctorDropdown(false);
+                        }}
                         className='w-full px-4 py-2 text-left hover:bg-gray-200'
                       >
                         {doctor}
@@ -132,16 +151,31 @@ export default function Hero() {
                   placeholder='Lieu...'
                   className='rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:w-64'
                   value={location}
-                  onChange={(e) => setLocation(e.target.value)}
+                  onChange={(e) => {
+                    setLocation(e.target.value);
+                    setShowCityDropdown(e.target.value.length > 0);
+                  }}
+                  onFocus={() => setShowCityDropdown(location.length > 0)}
+                  onBlur={() => {
+                    // Delay hiding the dropdown to allow click events to register
+                    setTimeout(() => setShowCityDropdown(false), 200);
+                  }}
                   disabled={loading}
                 />
-                {filteredCities.length > 0 && (
-                  <div className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'>
+                {showCityDropdown && filteredCities.length > 0 && (
+                  <div
+                    className='absolute left-0 mt-1 w-full rounded-lg border bg-white shadow-md'
+                    onMouseEnter={() => setShowCityDropdown(true)}
+                    onMouseLeave={() => setShowCityDropdown(false)}
+                  >
                     {filteredCities.map((city) => (
                       <button
                         key={city}
                         type='button'
-                        onClick={() => setLocation(city)}
+                        onClick={() => {
+                          setLocation(city);
+                          setShowCityDropdown(false);
+                        }}
                         className='w-full px-4 py-2 text-left hover:bg-gray-200'
                       >
                         {city}
@@ -161,7 +195,7 @@ export default function Hero() {
             </form>
           </div>
 
- 
+
           <div className='relative md:w-1/2'>
             <div className='relative h-80 w-full md:h-96'>
               <Image

@@ -26,6 +26,8 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const doctorsPerPage = 5;
+  const [showNameDropdown, setShowNameDropdown] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   // Fetch doctors data from API based on URL parameters
   useEffect(() => {
@@ -61,12 +63,16 @@ export default function SearchPage() {
 
   const handleSearch = () => {
     setCurrentPage(1);
+    setShowNameDropdown(false);
+    setShowLocationDropdown(false);
   };
 
   const handleClearSearch = () => {
     setSearchQuery('');
     setLocationQuery('');
     setCurrentPage(1);
+    setShowNameDropdown(false);
+    setShowLocationDropdown(false);
   };
 
   const indexOfLastDoctor = currentPage * doctorsPerPage;
@@ -101,11 +107,23 @@ export default function SearchPage() {
               placeholder='Nom, spécialité...'
               className='w-full rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowNameDropdown(e.target.value.length > 0);
+              }}
+              onFocus={() => setShowNameDropdown(searchQuery.length > 0)}
+              onBlur={() => {
+                // Delay hiding the dropdown to allow click events to register
+                setTimeout(() => setShowNameDropdown(false), 200);
+              }}
             />
             {/* Name/specialty search autocomplete */}
-            {searchQuery.length > 0 && (
-              <div className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'>
+            {showNameDropdown && searchQuery.length > 0 && (
+              <div
+                className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'
+                onMouseEnter={() => setShowNameDropdown(true)}
+                onMouseLeave={() => setShowNameDropdown(false)}
+              >
                 {uniqueNames
                   .filter((name) =>
                     name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -114,7 +132,10 @@ export default function SearchPage() {
                     <button
                       key={name}
                       className='w-full cursor-pointer px-4 py-2 text-left text-black hover:bg-gray-100'
-                      onClick={() => setSearchQuery(name)}
+                      onClick={() => {
+                        setSearchQuery(name);
+                        setShowNameDropdown(false);
+                      }}
                     >
                       {name}
                     </button>
@@ -127,7 +148,10 @@ export default function SearchPage() {
                     <button
                       key={specialty}
                       className='w-full cursor-pointer px-4 py-2 text-left text-black hover:bg-gray-100'
-                      onClick={() => setSearchQuery(specialty)}
+                      onClick={() => {
+                        setSearchQuery(specialty);
+                        setShowNameDropdown(false);
+                      }}
                     >
                       {specialty}
                     </button>
@@ -142,11 +166,23 @@ export default function SearchPage() {
               placeholder='Lieu...'
               className='w-full rounded-lg border bg-white text-black px-4 py-3 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none'
               value={locationQuery}
-              onChange={(e) => setLocationQuery(e.target.value)}
+              onChange={(e) => {
+                setLocationQuery(e.target.value);
+                setShowLocationDropdown(e.target.value.length > 0);
+              }}
+              onFocus={() => setShowLocationDropdown(locationQuery.length > 0)}
+              onBlur={() => {
+                // Delay hiding the dropdown to allow click events to register
+                setTimeout(() => setShowLocationDropdown(false), 200);
+              }}
             />
             {/* Location search autocomplete */}
-            {locationQuery.length > 0 && (
-              <div className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'>
+            {showLocationDropdown && locationQuery.length > 0 && (
+              <div
+                className='absolute z-10 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg'
+                onMouseEnter={() => setShowLocationDropdown(true)}
+                onMouseLeave={() => setShowLocationDropdown(false)}
+              >
                 {uniqueLocations
                   .filter((location) =>
                     location.toLowerCase().includes(locationQuery.toLowerCase())
@@ -155,7 +191,10 @@ export default function SearchPage() {
                     <button
                       key={location}
                       className='w-full cursor-pointer px-4 py-2 text-left text-black hover:bg-gray-100'
-                      onClick={() => setLocationQuery(location)}
+                      onClick={() => {
+                        setLocationQuery(location);
+                        setShowLocationDropdown(false);
+                      }}
                     >
                       {location}
                     </button>
