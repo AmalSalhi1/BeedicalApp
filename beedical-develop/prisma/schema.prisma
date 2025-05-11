@@ -9,17 +9,16 @@ datasource db {
 
 model User {
   clerkId     String       @id @unique
-  Profil      Profil?
   Favoris     Favoris[]
   Historique  Historique[]
+  Proche      Proche?
   procheGeres ProcheGere[]
-  Proche      Proche[]
+  Profil      Profil?
+  rendezVous  RendezVous[]
 }
 
 model Profil {
   id               String    @id @default(cuid())
-  user             User      @relation(fields: [userId], references: [clerkId])
-  userId           String    @unique
   prenom           String
   nom              String
   dateNaissance    DateTime?
@@ -27,29 +26,31 @@ model Profil {
   telephone        String
   email            String    @unique
   ville            String
-  lieuNaissance    String
-  adresse          String
-  codePostal       String
   assuranceMaladie String
   cin              String    @unique
   profession       String
+  adresse          String
+  codePostal       String
+  lieuNaissance    String
   photoProfil      String?
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [clerkId])
 }
 
 model Favoris {
   id        Int    @id @default(autoincrement())
-  user      User   @relation(fields: [userId], references: [clerkId])
   userId    String
   medecinId String
+  user      User   @relation(fields: [userId], references: [clerkId])
 
   @@unique([userId, medecinId])
 }
 
 model Historique {
   id           Int    @id @default(autoincrement())
-  user         User   @relation(fields: [userId], references: [clerkId])
   userId       String
   rendezVousId String
+  user         User   @relation(fields: [userId], references: [clerkId])
 }
 
 model Proche {
@@ -67,15 +68,16 @@ model Proche {
   userAccountId String?      @unique
   userAccount   User?        @relation(fields: [userAccountId], references: [clerkId])
   gerants       ProcheGere[]
+  rendezVous    RendezVous[]
 }
 
 model ProcheGere {
   id       Int    @id @default(autoincrement())
   userId   String
-  user     User   @relation(fields: [userId], references: [clerkId])
   procheId Int
-  proche   Proche @relation(fields: [procheId], references: [id])
   role     String
+  proche   Proche @relation(fields: [procheId], references: [id])
+  user     User   @relation(fields: [userId], references: [clerkId])
 
   @@unique([userId, procheId])
 }
