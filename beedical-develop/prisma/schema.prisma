@@ -82,74 +82,26 @@ model ProcheGere {
   @@unique([userId, procheId])
 }
 
-model Medecin {
-  id              Int                 @id @default(autoincrement())
-  prenom          String
-  nom             String
-  email           String?             @unique
-  telephone       String?
-  adresse         String?
-  codePostal      String?
-  image           String?
-  latitude        Float?
-  longitude       Float?
-  disponibilite   String[]
-  villeId         Int
-  accepteNouveaux Boolean             @default(true)
-  secteur         Int                 @default(1)
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
-  ville           Ville               @relation(fields: [villeId], references: [id])
-  specialites     MedecinSpecialite[]
-  disponibilites  Disponibilite[]
-  rendezVous      RendezVous[]
-}
 
 model Specialite {
-  id       Int                 @id @default(autoincrement())
-  nom      String              @unique
-  medecins MedecinSpecialite[]
+  id           String         @id @default(cuid())
+  nom          String         @unique
+  listeMedecins ListeMedecins[]
 }
 
 model Ville {
-  id       Int       @id @default(autoincrement())
-  nom      String    @unique
-  medecins Medecin[]
+  id           String         @id @default(cuid())
+  nom          String         @unique
+  region       String?
+  listeMedecins ListeMedecins[]
 }
 
-model MedecinSpecialite {
-  id           Int        @id @default(autoincrement())
-  medecinId    Int
-  specialiteId Int
-  medecin      Medecin    @relation(fields: [medecinId], references: [id])
-  specialite   Specialite @relation(fields: [specialiteId], references: [id])
-
-  @@unique([medecinId, specialiteId])
-}
-
-model RendezVous {
-  id          Int       @id @default(autoincrement())
-  date        DateTime
-  heureDebut  String
-  heureFin    String
-  medecinId   Int
-  patientId   String?
-  procheId    Int?
-  status      String    @default("disponible") // disponible, reservé, annulé, terminé
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  medecin     Medecin   @relation(fields: [medecinId], references: [id])
-  patient     User?     @relation(fields: [patientId], references: [clerkId])
-  proche      Proche?   @relation(fields: [procheId], references: [id])
-}
-
-model Disponibilite {
-  id         Int      @id @default(autoincrement())
-  date       DateTime
-  heureDebut String
-  heureFin   String
-  medecinId  Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  medecin    Medecin  @relation(fields: [medecinId], references: [id])
+model ListeMedecins {
+  id             String      @id @default(cuid())
+  nom            String
+  adresse        String?
+  specialite     Specialite  @relation(fields: [specialiteId], references: [id])
+  specialiteId   String
+  ville          Ville       @relation(fields: [villeId], references: [id])
+  villeId        String
 }

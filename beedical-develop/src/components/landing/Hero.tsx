@@ -31,10 +31,37 @@ export default function Hero() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
+    
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const doctorsResponse = await fetch('/api/doctors/list');
+        if (doctorsResponse.ok) {
+          const doctorsData = await doctorsResponse.json();
+          const names = doctorsData.map((doctor: any) => `Dr. ${doctor.nom}`);
+          setDoctorsList(names);
+        }
+        
+
+        const citiesResponse = await fetch('/api/cities/list');
+        if (citiesResponse.ok) {
+          const citiesData = await citiesResponse.json();
+          const cities = citiesData.map((city: any) => city.nom);
+          setCitiesList(cities);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
   }, []);
 
   // Recherche de villes
@@ -121,6 +148,7 @@ export default function Hero() {
 
     if (location) {
       searchParams.append('location', location);
+
     }
 
     // Rediriger vers la page de recherche même si aucun critère n'est spécifié
@@ -166,7 +194,7 @@ export default function Hero() {
               consultation en toute simplicité.
             </p>
 
-            {/* Barre de recherche */}
+     
             <form
               onSubmit={handleSearch}
               className='relative mt-10 flex flex-col gap-4 sm:flex-row sm:items-center shadow-lg rounded-xl bg-white p-2 border border-gray-100'
@@ -296,8 +324,6 @@ export default function Hero() {
               </div>
             </div>
           </div>
-
-          {/* Image with enhanced styling */}
           <div className='relative md:w-1/2'>
             <div className='relative h-96 w-full md:h-[500px] p-4'>
               <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-purple-100 rounded-3xl transform -rotate-2"></div>

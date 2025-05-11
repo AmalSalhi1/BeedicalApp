@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import DoctorsMap from '@/components/DoctorsMap';
 import Header from '@/components/landing/Header';
 import Footer from '@/components/landing/Footer';
-import DoctorCard from '@/components/DoctorCard';
 
 interface Doctor {
   id: number;
@@ -41,6 +40,7 @@ export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [locationQuery, setLocationQuery] = useState(initialLocation);
   const [filteredDoctors, setFilteredDoctors] = useState<Doctor[]>([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
@@ -140,6 +140,7 @@ export default function SearchPage() {
   const handleSearch = () => {
     // Permettre la recherche avec n'importe quelle combinaison de critères
     searchDoctors(searchQuery, locationQuery);
+
   };
 
   const indexOfLastDoctor = currentPage * doctorsPerPage;
@@ -188,6 +189,7 @@ export default function SearchPage() {
                     {specialty.nom}
                   </button>
                 ))}
+
               </div>
             )}
           </div>
@@ -211,6 +213,7 @@ export default function SearchPage() {
                     {city.nom}
                   </button>
                 ))}
+
               </div>
             )}
           </div>
@@ -222,8 +225,14 @@ export default function SearchPage() {
           >
             {isLoading ? 'Recherche en cours...' : 'Rechercher'}
           </button>
-        </div>
 
+          <button
+            onClick={handleClearSearch}
+            className='bg-gray-200 hover:bg-gray-300 mt-4 rounded-lg px-4 py-3 text-gray-700 transition-colors sm:mt-0'
+          >
+            Effacer
+          </button>
+        </div>
 
         {/* Results Count */}
         {filteredDoctors.length > 0 && (
@@ -247,7 +256,89 @@ export default function SearchPage() {
                 </p>
               ) : (
                 currentDoctors.map((doctor) => (
-                  <DoctorCard key={doctor.id} doctor={doctor} />
+                  <div key={doctor.id} className="mb-6 rounded-lg border border-blue-200 overflow-hidden">
+                    <div className="flex flex-col md:flex-row">
+                      {/* Left section with doctor info */}
+                      <div className="p-4 md:w-1/3 border-r border-blue-100">
+                        <div className="flex items-start gap-3">
+                          <div className="relative h-14 w-14">
+                            <Image
+                              src={doctor.image || '/images/default.png'}
+                              alt={doctor.nom}
+                              width={56}
+                              height={56}
+                              className="rounded-full object-cover"
+                            />
+                            <div className="absolute bottom-0 right-0">
+                              <span className="text-blue-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                                  <path fillRule="evenodd" d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z" clipRule="evenodd" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <Link href={`/doctor/${encodeURIComponent(doctor.id)}`}>
+                              <h3 className="text-lg font-bold text-black hover:text-primary cursor-pointer">Dr {doctor.nom}</h3>
+                            </Link>
+                            <p className="text-gray-800">{doctor.specialite}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 space-y-2 text-gray-800">
+                          <p className="flex items-center">
+                            <MapPinIcon className="h-5 w-5 text-gray-500 mr-2" />
+                            {doctor.location}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 p-4 md:w-2/3">
+                        {/* Move appointment button above calendar */}
+                        <div className="mb-4">
+                          <Link
+                            href={`/doctor/${encodeURIComponent(doctor.id)}`}
+                            className="bg-yellow-400 hover:bg-yellow-600 w-full block rounded-lg px-4 py-2 text-center text-white transition-colors"
+                          >
+                            PRENDRE RENDEZ-VOUS
+                          </Link>
+                        </div>
+
+                        {doctor.disponibilite && doctor.disponibilite.length > 0 ? (
+                          <div className="grid grid-cols-6 gap-2">
+                            {Array.from({ length: 6 }).map((_, index) => {
+                              const date = new Date();
+                              date.setDate(date.getDate() + index);
+
+                              const dayNames = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+                              const dayName = dayNames[date.getDay()];
+                              const dayNumber = date.getDate();
+                              const monthNames = ['jan', 'fév', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
+                              const monthName = monthNames[date.getMonth()];
+
+                              return (
+                                <div key={index} className="text-center">
+                                  <p className="text-gray-800">{dayName}</p>
+                                  <p className="text-gray-600 text-sm">{dayNumber} {monthName}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center text-center p-4">
+                            <div className="flex items-center text-gray-800">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2 text-gray-600">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                              </svg>
+                              {doctor.acceptsNewPatients === false
+                                ? "Ce soignant Reserve la prise de rendez-vous en ligne aux patients déjà suivis."
+                                : "Aucune disponibilité pour le moment."}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ))
               )}
             </div>
@@ -281,8 +372,9 @@ export default function SearchPage() {
             <div className="h-96 flex-grow overflow-hidden rounded-lg border border-gray-200 shadow-lg lg:h-auto">
               <DoctorsMap doctors={filteredDoctors} />
             </div>
+
           </div>
-        </div>
+        )}
       </div>
       <Footer />
     </div>
